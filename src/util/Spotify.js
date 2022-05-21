@@ -1,6 +1,4 @@
 
-import playlistTracks from '/Users/mateusmotter/Desktop/Coding/Projects/jammming-test2/src/Components/App/App.js';
-
 let accessToken;
 const clientID = "Your Client ID";
 const redirectURI = "http://localhost:3000/";
