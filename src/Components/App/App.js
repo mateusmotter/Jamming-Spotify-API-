@@ -48,10 +48,43 @@ class App extends React.Component {
       playlistTracks : []
     })});
   }
+
+  // Currently developing a logic to remove a track from the search results once it has already been added to the new playlist
   search(term) {
     Spotify.search(term).then(searchResults => {
-      this.setState({ searchResults: searchResults })
-    });
+
+      // creates a new array containing all IDs from the songs returned from the search
+      let searchResultsIDs = searchResults.map(track => track.id);
+      
+      // creates a new array containing all IDs from the songs saved in the new playlist
+      let savedTrackIDs = this.state.playlistTracks.map(track => track.id);
+      let songsToBeRemovedFromSearch = [];
+
+      // loops though both new arrays and compare each of the items, adds to 'songsToBeRemovedFromSearch' if any of the IDs is the same;
+      for (let searchId of searchResultsIDs) {
+        for (let savedId of savedTrackIDs) {
+          if (searchId === savedId) {
+            console.log(searchId);
+            songsToBeRemovedFromSearch.push(searchId);          
+          }
+        }
+      }
+      
+      let filteredSearchResults = [];
+      
+      // loops through search results, adding to 'filteredSearchResults' songs that have not been included in 'songsToBeRemovedFromSearch';
+      for (let track of searchResults) {
+          if (songsToBeRemovedFromSearch.includes(track.id)) {
+            console.log('don\'t add this one!!!');
+          } else {
+            filteredSearchResults.push(track);
+            console.log('added!')
+          }
+        }
+      // sets the state of 'searchResults' to 'filteredSearchResults', meaning songs that have already been added to the playlist won't be displayed to be added again in another search
+      this.setState({ searchResults: filteredSearchResults });
+      
+    })
   }
   render() {
     return (
@@ -60,12 +93,13 @@ class App extends React.Component {
         <div className="App">
           <SearchBar onSearch={this.search}/>
           <div className="App-playlist">
-            <SearchResults searchResults={this.state.searchResults} onAdd={this.addTracks}/>
+            <SearchResults searchResults={this.state.searchResults} 
+              onAdd={this.addTracks}/>
             <Playlist playlistName={this.state.playlistName} 
               playlistTracks={this.state.playlistTracks} 
-              onRemove={this.removeTrack}
               onNameChange={this.updatePlaylistName}
-              onSave={this.savePlaylist}/>
+              onSave={this.savePlaylist}
+              onRemove={this.removeTrack}/>
           </div>
         </div>
       </div>
