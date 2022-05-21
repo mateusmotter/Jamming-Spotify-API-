@@ -2,7 +2,7 @@
 import playlistTracks from '/Users/mateusmotter/Desktop/Coding/Projects/jammming-test2/src/Components/App/App.js';
 
 let accessToken;
-const clientID = '070cc543d9674dbfb2f50057211efe01';
+const clientID = "Your Client ID";
 const redirectURI = "http://localhost:3000/";
 
 const Spotify = {
